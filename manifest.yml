@@ -1,0 +1,4 @@
+applications:
+- name: vehicles_api
+  command: npm start
+  buildpack: nodejs_buildpack
