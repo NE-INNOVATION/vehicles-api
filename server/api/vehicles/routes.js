@@ -35,7 +35,7 @@ router.route('/vehicleInfo/:id')
     vehicle.annualMileage = data.annualMileage
     
     if(data.id === '') {
-      vehicle.id = vehicle.length + 1
+      vehicle.id = vehicles.length + 1
       vehicles.push(vehicle)
     }
   
