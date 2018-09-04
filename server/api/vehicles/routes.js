@@ -3,25 +3,26 @@ const router = express.Router({mergeParams: true})
 
 let vehicles = [];
 
-router.route('/vehicleInfo/:id')
+router.route('/vehicleInfo/:id/:quoteId')
   .get((req, res, next) => {
-    res.send(JSON.stringify(getVehicleInfo(req.params.id)))
+    res.send(JSON.stringify(getVehicleInfo(req.params.id, request.params.quoteId)))
   })
   .post((req, res, next) => {
     res.send(JSON.stringify({result : saveVehicleInfo(req.body)}))
   })
 
-  let getVehicleInfo = (id) => {
+  let getVehicleInfo = (id, quoteId) => {
     console.log('Returning Vehicle #', id)
-    return vehicles.find( x => x.id === id )
+    return vehicles.find( x => x.id === id && x.quoteId === quoteId )
   }
   
   let saveVehicleInfo = (data) => {
     let vehicle = '';
     if(data.id !== ''){
-      vehicle = vehicles.find( x => x.id === data.id );
+      vehicle = vehicles.find( x => x.id === data.id);
     }else{
       vehicle = {};
+      vehicle.quoteId = data.quoteId
     }
     
     vehicle.year = data.year
