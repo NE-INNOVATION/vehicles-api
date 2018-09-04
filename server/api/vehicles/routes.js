@@ -22,9 +22,9 @@ router.route('/vehicleInfo/:id/:quoteId')
       vehicle = vehicles.find( x => x.id === data.id && x.quoteId === data.quoteId);
     }else{
       vehicle = {};
+      vehicle.quoteId = data.quoteId
     }
     
-    vehicle.quoteId = data.quoteId
     vehicle.year = data.year
     vehicle.make = data.make
     vehicle.model = data.model
