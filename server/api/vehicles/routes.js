@@ -19,7 +19,7 @@ router.route('/vehicleInfo/:id/:quoteId')
   let saveVehicleInfo = (data) => {
     let vehicle = '';
     if(data.id !== ''){
-      vehicle = vehicles.find( x => x.id === data.id && x.quoteId === data.quoteId);
+      vehicle = vehicles.find( x => x.id === data.id);
     }else{
       vehicle = {};
       vehicle.quoteId = data.quoteId
