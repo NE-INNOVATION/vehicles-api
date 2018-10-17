@@ -1,6 +1,7 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const { route } = require('./api')
+const dataStore = require('./data/dataStore')
 
 module.exports = () => {
   
@@ -16,6 +17,7 @@ module.exports = () => {
   
   app.use(bodyParser.json())
   app.use('/api', route)
+  dataStore.createDbConnection()
   
   return app; 
 }

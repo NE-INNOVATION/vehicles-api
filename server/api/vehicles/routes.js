@@ -1,14 +1,15 @@
 const express = require('express')
 const router = express.Router({mergeParams: true})
+const dataStore = require('../../data/dataStore')
 
 let vehicles = [];
 
 router.route('/vehicleInfo/:id/:quoteId')
   .get((req, res, next) => {
-    res.send(JSON.stringify(getVehicleInfo(req.params.id, request.params.quoteId)))
+    res.send(JSON.stringify(getVehicleInfo(req.params.id, req.params.quoteId)))
   })
   .post((req, res, next) => {
-    res.send(JSON.stringify({result : saveVehicleInfo(req.body)}))
+    res.send(JSON.stringify({result : saveVehicleInfo(req.body, req.params.quoteId)}))
   })
 
   let getVehicleInfo = (id, quoteId) => {
@@ -16,13 +17,13 @@ router.route('/vehicleInfo/:id/:quoteId')
     return vehicles.find( x => x.id === id && x.quoteId === quoteId )
   }
   
-  let saveVehicleInfo = (data) => {
+  let saveVehicleInfo = (data, quoteId) => {
     let vehicle = '';
     if(data.id !== ''){
       vehicle = vehicles.find( x => x.id === data.id);
     }else{
       vehicle = {};
-      vehicle.quoteId = data.quoteId
+      vehicle.quoteId = quoteId
     }
     
     vehicle.year = data.year
@@ -39,7 +40,9 @@ router.route('/vehicleInfo/:id/:quoteId')
       vehicle.id = vehicles.length + 1
       vehicles.push(vehicle)
     }
-  
+    
+    dataStore.addVehicle(vehicle)
+
     return vehicles.length;
   }
 
