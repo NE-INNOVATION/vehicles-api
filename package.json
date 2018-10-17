@@ -1,7 +1,7 @@
 {
   "name": "drivers-api",
   "version": "1.0.0",
-  "description": "Drivers API to Get Put Drivers Data",
+  "description": "vehicles API to Get Put Vehicle data",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -25,5 +25,9 @@
   "license": "ISC",
   "devDependencies": {
     "nodemon": "^1.18.3"
+  },
+  "engines": {
+    "node": "10.X.X",
+    "npm": "6.X.X"
   }
 }
