@@ -1,7 +1,7 @@
 const mongo = require('mongodb').MongoClient
-const collection = process.env.COLLECTION_NAME || 'col_lrqi'
+const collection = process.env.COLLECTION_NAME
 const connectionString = process.env.CONNECTION_STRING
-const dbName = process.env.DB_NAME || 'lrqi'
+const dbName = process.env.DB_NAME
 let clientPromise
 
 const createDbConnection = () => {
@@ -12,7 +12,7 @@ const createDbConnection = () => {
 
 const getDbConnection = () => {
     return new Promise((resolve, reject) => {
-        mongo.connect(getConnectionString(), {
+        mongo.connect(connectionString, {
             connectTimeoutMS: 30000,
             useNewUrlParser: true,
             keepAlive: 1, 
@@ -29,10 +29,6 @@ const getDbConnection = () => {
                 }
             })
     })
-}
-
-const getConnectionString = () => {
-    return connectionString != undefined ? connectionString : 'mongodb://lrqi_db:lrqi_db_pwd@lrqidb-shard-00-00-wksjy.mongodb.net:27017,lrqidb-shard-00-01-wksjy.mongodb.net:27017,lrqidb-shard-00-02-wksjy.mongodb.net:27017/test?ssl=true&replicaSet=LRQIDB-shard-0&authSource=admin&retryWrites=true'
 }
 
 const find = async (quoteId) => {
