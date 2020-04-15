@@ -1,5 +1,5 @@
 {
-  "name": "drivers-api",
+  "name": "vehicles-api",
   "version": "1.0.0",
   "description": "vehicles API to Get Put Vehicle data",
   "main": "index.js",
