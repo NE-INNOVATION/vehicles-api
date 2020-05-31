@@ -63,7 +63,6 @@ jobs:
           'project development'
           'delete all --selector app=vehicles-api'
           'status'
-          'tag --source=docker quay.io/neinnovation/vehicles-api:${{ steps.extract_branch.outputs.branch }}-${{ steps.extract_branch.outputs.sha_short }} development/vehicles-api:${{ steps.extract_branch.outputs.branch }}-${{ steps.extract_branch.outputs.sha_short }}'
           'new-app quay.io/neinnovation/vehicles-api:${{ steps.extract_branch.outputs.branch }}-${{ steps.extract_branch.outputs.sha_short }}'
           'expose services/vehicles-api'
     - name: Scan Image
