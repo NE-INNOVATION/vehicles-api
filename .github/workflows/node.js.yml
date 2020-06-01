@@ -18,11 +18,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: npm ci
+    #- name: Use Node.js ${{ matrix.node-version }}
+      #uses: actions/setup-node@v1
+      #with:
+        #node-version: ${{ matrix.node-version }}
+    #- run: npm ci
     #- run: npm build --if-present
     - name: Extract branch name
       shell: bash
@@ -46,10 +46,10 @@ jobs:
          podman login quay.io -u ${{ secrets.docker_username }} -p ${{ secrets.docker_password }}
     - name: Build Image using Podman
       run: |
-         podman build . -t quay.io/neinnovation/vehicles-api:${{ steps.extract_branch.outputs.branch }}-${{ steps.extract_branch.outputs.sha_short }}
+         podman build . -t quay.io/neinnovationorg/vehicles-api:${{ steps.extract_branch.outputs.branch }}-${{ steps.extract_branch.outputs.sha_short }}
     - name: Push Image to Github Registry
       run: |
-          podman push quay.io/neinnovation/vehicles-api:${{ steps.extract_branch.outputs.branch }}-${{ steps.extract_branch.outputs.sha_short }}
+          podman push quay.io/neinnovationorg/vehicles-api:${{ steps.extract_branch.outputs.branch }}-${{ steps.extract_branch.outputs.sha_short }}
     - name: OpenShift Action
       uses: redhat-developer/openshift-actions@v2.0
       with:
@@ -63,13 +63,13 @@ jobs:
           'project development'
           'delete all --selector app=vehicles-api'
           'status'
-          'new-app quay.io/neinnovation/vehicles-api:${{ steps.extract_branch.outputs.branch }}-${{ steps.extract_branch.outputs.sha_short }}'
+          'new-app quay.io/neinnovationorg/vehicles-api:${{ steps.extract_branch.outputs.branch }}-${{ steps.extract_branch.outputs.sha_short }}'
           'expose services/vehicles-api'
     - name: Scan Image
       uses: Azure/container-scan@v0
       continue-on-error: true
       with:
-        image-name: quay.io/neinnovation/vehicles-api:${{ steps.extract_branch.outputs.branch }}-${{ steps.extract_branch.outputs.sha_short }}
+        image-name: quay.io/neinnovationorg/vehicles-api:${{ steps.extract_branch.outputs.branch }}-${{ steps.extract_branch.outputs.sha_short }}
         username: ${{ secrets.docker_username }}
         password: ${{ secrets.docker_password }}
         token: ${{ github.token }}
