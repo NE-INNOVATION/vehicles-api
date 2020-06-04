@@ -1,7 +1,7 @@
 # This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: Node.js CI
+name: Vehicles API - Node.js CI
 
 on:
   push:
@@ -46,10 +46,10 @@ jobs:
          podman login quay.io -u ${{ secrets.docker_username }} -p ${{ secrets.docker_password }}
     - name: Build Image using Podman
       run: |
-         podman build . -t quay.io/neinnovationorg/vehicles-api:${{ steps.extract_branch.outputs.branch }}-${{ steps.extract_branch.outputs.sha_short }}
+         podman build . -t quay.io/neinnovationorg/vehicles-api:${{ steps.extract_branch.outputs.branch }}
     - name: Push Image to Github Registry
       run: |
-          podman push quay.io/neinnovationorg/vehicles-api:${{ steps.extract_branch.outputs.branch }}-${{ steps.extract_branch.outputs.sha_short }}
+          podman push quay.io/neinnovationorg/vehicles-api:${{ steps.extract_branch.outputs.branch }}
     - name: OpenShift Action
       uses: redhat-developer/openshift-actions@v2.0
       with:
@@ -61,15 +61,12 @@ jobs:
         cmd: |
           'version'
           'project development'
-          'delete all --selector app=vehicles-api'
-          'status'
-          'new-app quay.io/neinnovationorg/vehicles-api:${{ steps.extract_branch.outputs.branch }}-${{ steps.extract_branch.outputs.sha_short }}'
-          'expose services/vehicles-api'
+          'tag --source=docker quay.io/neinnovationorg/vehicles-api:${{ steps.extract_branch.outputs.branch }} development/vehicles-api:${{ steps.extract_branch.outputs.branch }}'
     - name: Scan Image
       uses: Azure/container-scan@v0
       continue-on-error: true
       with:
-        image-name: quay.io/neinnovationorg/vehicles-api:${{ steps.extract_branch.outputs.branch }}-${{ steps.extract_branch.outputs.sha_short }}
+        image-name: quay.io/neinnovationorg/vehicles-api:${{ steps.extract_branch.outputs.branch }}
         username: ${{ secrets.docker_username }}
         password: ${{ secrets.docker_password }}
         token: ${{ github.token }}
