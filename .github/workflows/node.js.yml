@@ -46,7 +46,7 @@ jobs:
          podman login quay.io -u ${{ secrets.docker_username }} -p ${{ secrets.docker_password }}
     - name: Build Image using Podman
       run: |
-         podman build . -t quay.io/neinnovationorg/vehicles-api:${{ steps.extract_branch.outputs.branch }}
+         podman build . -t quay.io/neinnovationorg/vehicles-api:${{ steps.extract_branch.outputs.branch }} --cgroup-manager=cgroupfs
     - name: Push Image to Github Registry
       run: |
           podman push quay.io/neinnovationorg/vehicles-api:${{ steps.extract_branch.outputs.branch }}
