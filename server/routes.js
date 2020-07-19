@@ -1,8 +1,13 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const { route } = require('./api')
-const dataStore = require('./data/dataStore')
 const health = require('@cloudnative/health-connect')
+const winston = require('winston')
+const logger = winston.createLogger({
+  transports: [
+      new winston.transports.Console()
+  ]
+});
 
 const healthcheck = new health.HealthChecker()
 
@@ -17,6 +22,11 @@ module.exports = () => {
     res.setHeader('Access-Control-Allow-Credentials', true);
     next();
   });
+
+  app.use( (req, res, done) => {
+    logger.info(`app.${req.originalUrl}`);
+    done();
+  });
   
   app.use('/live', health.LivenessEndpoint(healthcheck))
   app.use('/ready', health.ReadinessEndpoint(healthcheck))
@@ -24,7 +34,6 @@ module.exports = () => {
   
   app.use(bodyParser.json())
   app.use('/api', route)
-  //dataStore.createDbConnection()
   
   return app; 
 }

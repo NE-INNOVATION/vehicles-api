@@ -15,7 +15,8 @@
     "express": "^4.17.1",
     "https": "^1.0.0",
     "mongodb": "^3.5.6",
-    "random-number": "0.0.9"
+    "random-number": "0.0.9",
+    "winston": "^3.3.3"
   },
   "repository": {
     "type": "git",
