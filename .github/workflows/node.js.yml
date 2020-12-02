@@ -5,7 +5,7 @@ name: Vehicles API - Node.js CI
 
 on:
   push:
-    branches: [ master, dev ]
+    branches: [ master, dev, original-dev ]
 
 jobs:
   build:
@@ -18,12 +18,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    #- name: Use Node.js ${{ matrix.node-version }}
-      #uses: actions/setup-node@v1
-      #with:
-        #node-version: ${{ matrix.node-version }}
-    #- run: npm ci
-    #- run: npm build --if-present
     - name: Extract branch name
       shell: bash
       run: |
@@ -60,8 +54,8 @@ jobs:
         # Oc command to be executed
         cmd: |
           'version'
-          'project development'
-          'tag --source=docker quay.io/neinnovationorg/vehicles-api:${{ steps.extract_branch.outputs.branch }} development/vehicles-api:${{ steps.extract_branch.outputs.branch }}'
+          'project stage'
+          'tag --source=docker quay.io/neinnovationorg/vehicles-api:${{ steps.extract_branch.outputs.branch }} stage/vehicles-api:${{ steps.extract_branch.outputs.branch }}'
     - name: Scan Image
       uses: Azure/container-scan@v0
       continue-on-error: true

@@ -2,8 +2,6 @@ const express = require("express");
 var rn = require("random-number");
 const router = express.Router({ mergeParams: true });
 const dataStore = require("../../data/dataStore");
-const axios = require("axios");
-const { Agent } = require("https");
 const winston = require("winston");
 const logger = winston.createLogger({
   transports: [new winston.transports.Console()],
@@ -15,20 +13,14 @@ var gen = rn.generator({
   integer: true,
 });
 
-const client = axios.create({
-  httpsAgent: new Agent({
-    rejectUnauthorized: false,
-  }),
-});
-
 router
-  .route("/vehicleInfo/:id/:quoteId")
+  .route("/vehicleInfo/:quoteId/:vehId?")
   .get(async (req, res) => {
     logger.info(
-      `app.api.vehicles - getting vehicle with id - ${req.params.id}`
+      `app.api.vehicles - getting vehicle with id - ${req.params.vehId}`
     );
     res.send(
-      JSON.stringify(await getVehicleInfo(req.params.id, req.params.quoteId))
+      JSON.stringify(await getVehicleInfo(req.params.vehId, req.params.quoteId))
     );
   })
   .post(async (req, res) => {
@@ -40,9 +32,9 @@ router
     );
   });
 
-let getVehicleInfo = async (id, quoteId) => {
+let getVehicleInfo = async (vehicleId, quoteId) => {
   try {
-    let vehicle = await dataStore.findVehicle(quoteId);
+    let vehicle = await dataStore.findVehicle(vehicleId, quoteId);
     return vehicle;
   } catch (error) {
     logger.error(
@@ -55,8 +47,13 @@ let getVehicleInfo = async (id, quoteId) => {
 
 let saveVehicleInfo = async (data, quoteId) => {
   try {
-    let vehicle = "";
-    vehicle = {};
+    let vehicle = {};
+    if (data.vehId) {
+      vehicle = await dataStore.findVehicle(data.vehId);
+    } else {
+      vehicle.quoteId = gen().toString();
+      vehicle.id = gen().toString();
+    }
     vehicle.quoteId = quoteId;
     vehicle.year = data.year;
     vehicle.make = data.make;
@@ -68,24 +65,12 @@ let saveVehicleInfo = async (data, quoteId) => {
     vehicle.vehiclePrimaryUse = data.vehiclePrimaryUse;
     vehicle.annualMileage = data.annualMileage;
 
-    if (!data.id) {
-      vehicle.id = gen().toString();
-    }
-
-    await client.post(
-      `${process.env.DB_SERVICE_URL}/${process.env.COLLECTION_NAME}`,
-      vehicle,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    await dataStore.addVehicle(vehicle);
     return vehicle.id;
 
   } catch (error) {
     logger.error(
-      `app.api.vehicles - error creating new driver - ${JSON.stringify(error)}`
+      `app.api.vehicles - error creating new vehicle - ${JSON.stringify(error)}`
     );
   }
 };
