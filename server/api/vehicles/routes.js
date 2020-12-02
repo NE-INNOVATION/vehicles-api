@@ -38,7 +38,7 @@ let getVehicleInfo = async (vehicleId, quoteId) => {
     return vehicle;
   } catch (error) {
     logger.error(
-      `app.api.vehicles - getting vehicle#${id}, from quote#${quoteId} failed - ${JSON.stringify(
+      `app.api.vehicles - getting vehicle#${vehicleId}, from quote#${quoteId} failed - ${JSON.stringify(
         error
       )}`
     );
@@ -48,10 +48,9 @@ let getVehicleInfo = async (vehicleId, quoteId) => {
 let saveVehicleInfo = async (data, quoteId) => {
   try {
     let vehicle = {};
-    if (data.vehId) {
-      vehicle = await dataStore.findVehicle(data.vehId);
+    if (data.id) {
+      vehicle = await dataStore.findVehicle(data.id, quoteId);
     } else {
-      vehicle.quoteId = gen().toString();
       vehicle.id = gen().toString();
     }
     vehicle.quoteId = quoteId;
@@ -67,7 +66,6 @@ let saveVehicleInfo = async (data, quoteId) => {
 
     await dataStore.addVehicle(vehicle);
     return vehicle.id;
-
   } catch (error) {
     logger.error(
       `app.api.vehicles - error creating new vehicle - ${JSON.stringify(error)}`
