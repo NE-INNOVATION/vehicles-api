@@ -56,7 +56,7 @@ const findVehicle = async (vehicleId, quoteId) => {
 const addVehicle = async (vehicleInfo) => {
   let client = await clientPromise;
   let db = client.db(dbName);
-  let filter = { quoteId: vehicleInfo.quoteId };
+  let filter = { quoteId: vehicleInfo.quoteId, id: vehicleInfo.id };
   let objectId, action;
   try {
     let saveResult = await db
