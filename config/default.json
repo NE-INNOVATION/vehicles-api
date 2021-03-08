@@ -1,0 +1,5 @@
+{
+  "mongoURI": "mongodb://lrqi_db:lrqi_db_pwd@lrqidb-shard-00-00-wksjy.mongodb.net:27017,lrqidb-shard-00-01-wksjy.mongodb.net:27017,lrqidb-shard-00-02-wksjy.mongodb.net:27017/test?ssl=true&replicaSet=LRQIDB-shard-0&authSource=admin&retryWrites=true",
+  "jwtSecret": "mysecrettoken",
+  "dbName": "lrqi"
+}

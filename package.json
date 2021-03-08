@@ -5,16 +5,20 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node bin/server.js"
+    "start": "node bin/server.js",
+    "dev": "nodemon bin/server.js"
   },
   "dependencies": {
     "@cloudnative/health-connect": "^2.1.0",
     "axios": "^0.19.2",
     "body-parser": "^1.19.0",
+    "config": "^3.3.4",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "express-validator": "^6.10.0",
     "https": "^1.0.0",
     "mongodb": "^3.5.6",
+    "mongoose": "^5.11.19",
     "random-number": "0.0.9",
     "winston": "^3.3.3"
   },
@@ -29,7 +33,7 @@
   "author": "Pratik",
   "license": "ISC",
   "devDependencies": {
-    "nodemon": "^1.18.3"
+    "nodemon": "^1.19.4"
   },
   "engines": {
     "node": "10.X.X",
