@@ -2,6 +2,7 @@ const express = require("express");
 const health = require("@cloudnative/health-connect");
 const winston = require("winston");
 const connectDB = require("../config/db");
+
 const logger = winston.createLogger({
   transports: [new winston.transports.Console()],
 });

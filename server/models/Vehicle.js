@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 const VehicleSchema = new Schema({
   quoteId: {
     type: String,
+    required: true,
   },
   annualMileage: {
     type: String,
