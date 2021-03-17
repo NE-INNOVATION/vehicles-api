@@ -44,4 +44,4 @@ const VehicleSchema = new Schema({
   },
 });
 
-module.exports = Vehicle = mongoose.model("vehicles", VehicleSchema);
+module.exports = Vehicle = mongoose.model("col_lrqi_vehicles", VehicleSchema);
