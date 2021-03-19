@@ -25,15 +25,10 @@ router.post(
   [
     [
       check("annualMileage", "Annual Mileage is required").not().isEmpty(),
-      check("daysDriven", "Days Driven is required").not().isEmpty(),
       check("make", "Make is required").not().isEmpty(),
       check("model", "Model is required").not().isEmpty(),
-      check("milesDriven", "Miles Driven is required").not().isEmpty(),
       check("quoteId", "QuoteId is required").not().isEmpty(),
       check("vehicleOwned", "Vehicle Owned is required").not().isEmpty(),
-      check("vehiclePrimaryUse", "Vehicle Primary Use is required")
-        .not()
-        .isEmpty(),
       check("vehicleUsage", "Vehicle Usage is required").not().isEmpty(),
       check("year", "Year is required").not().isEmpty(),
     ],
