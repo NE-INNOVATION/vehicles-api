@@ -12,7 +12,6 @@ const VehicleSchema = new Schema({
   },
   daysDriven: {
     type: String,
-    required: true,
   },
   make: {
     type: Number,
@@ -24,7 +23,6 @@ const VehicleSchema = new Schema({
   },
   milesDriven: {
     type: String,
-    required: true,
   },
   vehicleOwned: {
     type: String,
@@ -32,7 +30,6 @@ const VehicleSchema = new Schema({
   },
   vehiclePrimaryUse: {
     type: String,
-    required: true,
   },
   vehicleUsage: {
     type: String,
