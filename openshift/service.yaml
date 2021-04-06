@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: vehicles-api
+    app.kubernetes.io/component: vehicles-api
+  name: vehicles-api
+spec:
+  ports:
+  - name: 8080-tcp
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    deploymentconfig: vehicles-api
+  sessionAffinity: None
+  type: ClusterIP

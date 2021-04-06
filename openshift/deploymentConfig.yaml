@@ -1,0 +1,53 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  labels:
+    app: vehicles-api
+    app.kubernetes.io/component: vehicles-api
+  name: vehicles-api
+spec:
+  replicas: 1
+  selector:
+    deploymentconfig: vehicles-api
+  strategy:
+    type: Rolling
+  template:
+    metadata:
+      labels:
+        deploymentconfig: vehicles-api
+    spec:
+      containers:
+      - env:
+        - name: COLLECTION_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: COLLECTION_NAME
+              name: vehicles-api
+        - name: CONNECTION_STRING
+          valueFrom:
+            configMapKeyRef:
+              key: CONNECTION_STRING
+              name: vehicles-api
+        - name: DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              key: DB_NAME
+              name: vehicles-api
+        image: quay.io/neinnovationorg/vehicles:pcf-openshift
+        imagePullPolicy: IfNotPresent
+        name: vehicles-api
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+      restartPolicy: Always
+  triggers:
+  - imageChangeParams:
+      automatic: true
+      containerNames:
+      - vehicles-api
+      from:
+        kind: ImageStreamTag
+        name: vehicles-api:pcf-openshift
+        namespace: nube-motus
+    type: ImageChange
+  - type: configChange
