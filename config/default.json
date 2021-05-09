@@ -1,3 +1,4 @@
 {
-  "mongoURI": "mongodb://lrqi_db:lrqi_db_pwd@lrqidb-shard-00-00-wksjy.mongodb.net:27017,lrqidb-shard-00-01-wksjy.mongodb.net:27017,lrqidb-shard-00-02-wksjy.mongodb.net:27017/lrqi?ssl=true&replicaSet=LRQIDB-shard-0&authSource=admin&retryWrites=true"
+  "mongoURI": "mongodb://neion_db:neion_db_pwd@ec2-18-116-161-43.us-east-2.compute.amazonaws.com:8081,ec2-3-142-155-241.us-east-2.compute.amazonaws.com:8081,ec2-3-20-135-160.us-east-2.compute.amazonaws.com:8081/lrqi?replicaSet=rs0&authSource=admin&retryWrites=true",
+  "jwtSecret": "mysecrettoken"
 }
