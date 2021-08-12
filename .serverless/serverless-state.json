@@ -10,6 +10,9 @@
       "lambdaHashingVersion": "20201221",
       "stage": "dev",
       "region": "us-east-1",
+      "environment": {
+        "ENV_1": "VAL_1"
+      },
       "versionFunctions": true,
       "compiledCloudFormationTemplate": {
         "AWSTemplateFormatVersion": "2010-09-09",
@@ -84,10 +87,10 @@
               }
             }
           },
-          "HelloLogGroup": {
+          "ApiLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
-              "LogGroupName": "/aws/lambda/vehicles-api-dev-hello"
+              "LogGroupName": "/aws/lambda/vehicles-api-dev-api"
             }
           },
           "IamRoleLambdaExecution": {
@@ -167,20 +170,25 @@
               }
             }
           },
-          "HelloLambdaFunction": {
+          "ApiLambdaFunction": {
             "Type": "AWS::Lambda::Function",
             "Properties": {
               "Code": {
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/vehicles-api/dev/1628567762444-2021-08-10T03:56:02.444Z/vehicles-api.zip"
+                "S3Key": "serverless/vehicles-api/dev/1628741991801-2021-08-12T04:19:51.801Z/api.zip"
               },
-              "Handler": "handler.hello",
+              "Handler": "serverless/handler.api",
               "Runtime": "nodejs12.x",
-              "FunctionName": "vehicles-api-dev-hello",
+              "FunctionName": "vehicles-api-dev-api",
               "MemorySize": 1024,
               "Timeout": 6,
+              "Environment": {
+                "Variables": {
+                  "ENV_1": "VAL_1"
+                }
+              },
               "Role": {
                 "Fn::GetAtt": [
                   "IamRoleLambdaExecution",
@@ -189,17 +197,198 @@
               }
             },
             "DependsOn": [
-              "HelloLogGroup"
+              "ApiLogGroup"
             ]
           },
-          "HelloLambdaVersionBPhmGRGbxqMtuw8ezZiRT3Zvi94eeRd2FNbnZCNM0": {
+          "ApiLambdaVersionzqCt85WxQEz9La82AG1eDBOQnmYjSYqZoiaQSJ9jb8": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
-                "Ref": "HelloLambdaFunction"
+                "Ref": "ApiLambdaFunction"
               },
-              "CodeSha256": "KlrI1t/hdOVcofNHU0RTr4sq4Ay+VUI7Ue80IdP3Zas="
+              "CodeSha256": "Igqo6Bk8CN62acAobgb/vsGpZAHcJmvFp7gJ+eiJ7nw="
+            }
+          },
+          "ApiGatewayRestApi": {
+            "Type": "AWS::ApiGateway::RestApi",
+            "Properties": {
+              "Name": "dev-vehicles-api",
+              "EndpointConfiguration": {
+                "Types": [
+                  "EDGE"
+                ]
+              },
+              "Policy": ""
+            }
+          },
+          "ApiGatewayResourceVehicle": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Fn::GetAtt": [
+                  "ApiGatewayRestApi",
+                  "RootResourceId"
+                ]
+              },
+              "PathPart": "vehicle",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayResourceVehicleProxyVar": {
+            "Type": "AWS::ApiGateway::Resource",
+            "Properties": {
+              "ParentId": {
+                "Ref": "ApiGatewayResourceVehicle"
+              },
+              "PathPart": "{proxy}",
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              }
+            }
+          },
+          "ApiGatewayMethodVehicleProxyVarGet": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "GET",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceVehicleProxyVar"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "ApiLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            },
+            "DependsOn": [
+              "ApiLambdaPermissionApiGateway"
+            ]
+          },
+          "ApiGatewayMethodVehicleProxyVarPost": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "POST",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceVehicleProxyVar"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "ApiLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            },
+            "DependsOn": [
+              "ApiLambdaPermissionApiGateway"
+            ]
+          },
+          "ApiGatewayDeployment1628741967366": {
+            "Type": "AWS::ApiGateway::Deployment",
+            "Properties": {
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "StageName": "dev"
+            },
+            "DependsOn": [
+              "ApiGatewayMethodVehicleProxyVarGet",
+              "ApiGatewayMethodVehicleProxyVarPost"
+            ]
+          },
+          "ApiLambdaPermissionApiGateway": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "ApiLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "ApiGatewayRestApi"
+                    },
+                    "/*/*"
+                  ]
+                ]
+              }
             }
           }
         },
@@ -212,13 +401,39 @@
               "Name": "sls-vehicles-api-dev-ServerlessDeploymentBucketName"
             }
           },
-          "HelloLambdaFunctionQualifiedArn": {
+          "ApiLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "HelloLambdaVersionBPhmGRGbxqMtuw8ezZiRT3Zvi94eeRd2FNbnZCNM0"
+              "Ref": "ApiLambdaVersionzqCt85WxQEz9La82AG1eDBOQnmYjSYqZoiaQSJ9jb8"
             },
             "Export": {
-              "Name": "sls-vehicles-api-dev-HelloLambdaFunctionQualifiedArn"
+              "Name": "sls-vehicles-api-dev-ApiLambdaFunctionQualifiedArn"
+            }
+          },
+          "ServiceEndpoint": {
+            "Description": "URL of the service endpoint",
+            "Value": {
+              "Fn::Join": [
+                "",
+                [
+                  "https://",
+                  {
+                    "Ref": "ApiGatewayRestApi"
+                  },
+                  ".execute-api.",
+                  {
+                    "Ref": "AWS::Region"
+                  },
+                  ".",
+                  {
+                    "Ref": "AWS::URLSuffix"
+                  },
+                  "/dev"
+                ]
+              ]
+            },
+            "Export": {
+              "Name": "sls-vehicles-api-dev-ServiceEndpoint"
             }
           }
         }
@@ -307,18 +522,43 @@
       },
       "vpc": {}
     },
+    "custom": {
+      "serverless-offline": {
+        "port": 4000
+      }
+    },
+    "plugins": [
+      "serverless-offline"
+    ],
     "pluginsData": {},
     "functions": {
-      "hello": {
-        "handler": "handler.hello",
-        "events": [],
-        "name": "vehicles-api-dev-hello",
-        "package": {},
+      "api": {
+        "handler": "serverless/handler.api",
+        "events": [
+          {
+            "http": {
+              "path": "vehicle/{proxy}",
+              "method": "get",
+              "integration": "AWS_PROXY"
+            }
+          },
+          {
+            "http": {
+              "path": "vehicle/{proxy}",
+              "method": "post",
+              "integration": "AWS_PROXY"
+            }
+          }
+        ],
+        "name": "vehicles-api-dev-api",
+        "package": {
+          "artifact": "E:\\neion\\api\\vehicles-api\\.serverless\\api.zip"
+        },
         "memory": 1024,
         "timeout": 6,
         "runtime": "nodejs12.x",
         "vpc": {},
-        "versionLogicalId": "HelloLambdaVersionBPhmGRGbxqMtuw8ezZiRT3Zvi94eeRd2FNbnZCNM0"
+        "versionLogicalId": "ApiLambdaVersionzqCt85WxQEz9La82AG1eDBOQnmYjSYqZoiaQSJ9jb8"
       }
     },
     "configValidationMode": "warn",
@@ -328,6 +568,17 @@
         "$ref": "$[\"service\"][\"serviceObject\"]"
       },
       "frameworkVersion": "2",
+      "plugins": {
+        "$ref": "$[\"service\"][\"plugins\"]"
+      },
+      "package": {
+        "individually": true,
+        "excludeDevDependencies": true,
+        "artifactDirectoryName": "serverless/vehicles-api/dev/1628741991801-2021-08-12T04:19:51.801Z"
+      },
+      "custom": {
+        "$ref": "$[\"service\"][\"custom\"]"
+      },
       "provider": {
         "$ref": "$[\"service\"][\"provider\"]"
       },
@@ -336,11 +587,11 @@
       }
     },
     "layers": {},
-    "isDashboardMonitoringPreconfigured": false,
-    "artifact": "E:\\neion\\api\\vehicles-api\\.serverless\\vehicles-api.zip"
+    "isDashboardMonitoringPreconfigured": false
   },
   "package": {
-    "artifactDirectoryName": "serverless/vehicles-api/dev/1628567762444-2021-08-10T03:56:02.444Z",
-    "artifact": "vehicles-api.zip"
+    "individually": true,
+    "artifactDirectoryName": "serverless/vehicles-api/dev/1628741991801-2021-08-12T04:19:51.801Z",
+    "artifact": ""
   }
 }
