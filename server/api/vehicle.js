@@ -1,5 +1,4 @@
 const express = require("express");
-const config = require("config");
 const router = express.Router();
 const { check, validationResult } = require("express-validator");
 
@@ -39,38 +38,9 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const {
-      quoteId,
-      annualMileage,
-      daysDriven,
-      make,
-      model,
-      milesDriven,
-      vehicleOwned,
-      vehiclePrimaryUse,
-      vehicleUsage,
-      year,
-    } = req.body;
-
     try {
-      const vehicle = new Vehicle({
-        quoteId,
-        annualMileage,
-        daysDriven,
-        make,
-        model,
-        milesDriven,
-        vehicleOwned,
-        vehiclePrimaryUse,
-        vehicleUsage,
-        year,
-      });
-
-      await vehicle.save();
-
-      res.json({ quoteId });
+      res.json({ quoteId: await module.exports.saveVehicle(req) });
     } catch (err) {
-      console.error(err.message);
       res.status(500).send("Server Error");
     }
   }
@@ -89,3 +59,40 @@ router.delete("/vehicles/vehicleInfo/:id?", async (req, res) => {
 });
 
 module.exports = router;
+module.exports.saveVehicle = async (req) => {
+  const {
+    quoteId,
+    annualMileage,
+    daysDriven,
+    make,
+    model,
+    milesDriven,
+    vehicleOwned,
+    vehiclePrimaryUse,
+    vehicleUsage,
+    year,
+  } = req.body;
+
+  try {
+    const vehicle = new Vehicle({
+      quoteId,
+      annualMileage,
+      daysDriven,
+      make,
+      model,
+      milesDriven,
+      vehicleOwned,
+      vehiclePrimaryUse,
+      vehicleUsage,
+      year,
+    });
+
+    await vehicle.save();
+
+    return quoteId;
+  } catch (err) {
+    console.error(err.message);
+    throw err;
+    // return 500 error
+  }
+};

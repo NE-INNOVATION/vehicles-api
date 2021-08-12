@@ -4,9 +4,10 @@
   "description": "vehicles API to Get Put Vehicle data",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node bin/server.js",
-    "dev": "nodemon bin/server.js"
+    "start:lambda": "serverless offline start",
+    "dev": "nodemon bin/server.js",
+    "deploy:lambda": "serverless deploy -v"
   },
   "dependencies": {
     "@cloudnative/health-connect": "^2.1.0",
@@ -20,6 +21,7 @@
     "mongodb": "^3.5.6",
     "mongoose": "^5.11.19",
     "random-number": "0.0.9",
+    "serverless-hooks-plugin": "^1.1.0",
     "winston": "^3.3.3"
   },
   "repository": {
@@ -33,7 +35,9 @@
   "author": "Pratik",
   "license": "ISC",
   "devDependencies": {
-    "nodemon": "^1.19.4"
+    "nodemon": "^1.19.4",
+    "serverless": "^2.53.1",
+    "serverless-offline": "^8.0.0"
   },
   "engines": {
     "node": "10.X.X",
