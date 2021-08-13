@@ -1,7 +1,7 @@
 "use strict";
 
+const { saveVehicle } = require("../commons");
 const connectDB = require("../config/db");
-const { saveVehicle } = require("../server/api/vehicle");
 
 module.exports.api = async (event) => {
   const path = event.pathParameters.proxy;
@@ -24,8 +24,7 @@ module.exports.api = async (event) => {
     }
     case "save": {
       connectDB();
-      console.log("@@@@@@@@@@@@@@", JSON.parse(event.body));
-      const quoteId = await saveVehicle({ body: JSON.parse(event.body) });
+      const quoteId = await saveVehicle(JSON.parse(event.body));
       return {
         statusCode: 200,
         body: JSON.stringify({

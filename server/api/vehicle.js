@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { check, validationResult } = require("express-validator");
+const { saveVehicle } = require("../../commons");
 
 const Vehicle = require("../models/Vehicle");
 
@@ -39,8 +40,9 @@ router.post(
     }
 
     try {
-      res.json({ quoteId: await module.exports.saveVehicle(req) });
+      res.json({ quoteId: await saveVehicle(req.body) });
     } catch (err) {
+      console.error(err.message);
       res.status(500).send("Server Error");
     }
   }
@@ -59,40 +61,3 @@ router.delete("/vehicles/vehicleInfo/:id?", async (req, res) => {
 });
 
 module.exports = router;
-module.exports.saveVehicle = async (req) => {
-  const {
-    quoteId,
-    annualMileage,
-    daysDriven,
-    make,
-    model,
-    milesDriven,
-    vehicleOwned,
-    vehiclePrimaryUse,
-    vehicleUsage,
-    year,
-  } = req.body;
-
-  try {
-    const vehicle = new Vehicle({
-      quoteId,
-      annualMileage,
-      daysDriven,
-      make,
-      model,
-      milesDriven,
-      vehicleOwned,
-      vehiclePrimaryUse,
-      vehicleUsage,
-      year,
-    });
-
-    await vehicle.save();
-
-    return quoteId;
-  } catch (err) {
-    console.error(err.message);
-    throw err;
-    // return 500 error
-  }
-};
