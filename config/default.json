@@ -1,4 +1,4 @@
 {
-  "mongoURI": "mongodb://neion_db:neion_db_pwd@ec2-18-116-161-43.us-east-2.compute.amazonaws.com:8081,ec2-3-142-155-241.us-east-2.compute.amazonaws.com:8081,ec2-3-20-135-160.us-east-2.compute.amazonaws.com:8081/lrqi?replicaSet=rs0&authSource=admin&retryWrites=true",
+  "mongoURI": "mongodb+srv://lrqi_db:lrqi_db_pwd@azure-cluster.eiahf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
   "jwtSecret": "mysecrettoken"
 }
