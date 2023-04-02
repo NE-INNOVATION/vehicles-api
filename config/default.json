@@ -1,4 +1,0 @@
-{
-  "mongoURI": "mongodb+srv://lrqi_db:lrqi_db_pwd@azure-cluster.eiahf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
-  "jwtSecret": "mysecrettoken"
-}
